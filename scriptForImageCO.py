@@ -91,7 +91,6 @@ semipasslist = ['sgrc_1_S1.ms.line', 'sgrc_2_S1.ms.line']
 
 linelist = ['../member.uid___A001_X1590_X2a76/maps/'+eb for eb in tm2eblist]+['../member.uid___A001_X1590_X2a74/maps/'+eb for eb in tm1eblist]+['../semipass/maps/'+eb for eb in semipasslist]
 
-
 # Image Parameters
 cell = '0.04arcsec'
 imsize = 960
@@ -102,14 +101,14 @@ imname = './line/sgrc_CO_3_2'
 niter = 100000
 pc = 'ICRS 17:44:40.391513 -29.28.14.567605'
 restfreq = '345.7959899GHz'
-start = '10km/s'
-nchan = 120
+start = '-150km/s'  ## Vsys ~-55 km/s
+nchan = 200
 
 tclean(vis = linelist,
   imagename=imname,
   specmode='cube',
   deconvolver = 'multiscale',
-  spw = 2, ## Only select spw2 to image
+  spw = '2', ## Only select spw2 to image
   niter = niter,
   start = start,
   nchan = nchan,
@@ -133,3 +132,5 @@ tclean(vis = linelist,
   lownoisethreshold = 1.5,
   negativethreshold = 0.0,
   pbmask = 0.3)
+
+exportfits(imagename=imname+".image", fitsimage=imname+".image.fits", velocity=True, overwrite=True)
