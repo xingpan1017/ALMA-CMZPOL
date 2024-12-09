@@ -134,3 +134,58 @@ tclean(vis = linelist,
   pbmask = 0.3)
 
 exportfits(imagename=imname+".image", fitsimage=imname+".image.fits", velocity=True, overwrite=True)
+
+
+##############################################################################
+## Combine all the datasets to image SiO
+##############################################################################
+
+tm2eblist = ['sgrc_1_S1.ms.line', 'sgrc_2_S1.ms.line']
+tm1eblist = ['sgrc_1_S1.ms.line', 'sgrc_1_S2.ms.line', 'sgrc_2_S1.ms.line', 'sgrc_2_S2.ms.line']
+semipasslist = ['sgrc_1_S1.ms.line', 'sgrc_2_S1.ms.line']
+
+linelist = ['../member.uid___A001_X1590_X2a76/maps/'+eb for eb in tm2eblist]+['../member.uid___A001_X1590_X2a74/maps/'+eb for eb in tm1eblist]+['../semipass/maps/'+eb for eb in semipasslist]
+
+# Image Parameters
+cell = '0.04arcsec'
+imsize = 960
+weighting = 'briggs'
+robust = 0.5
+threshold = '0.1mJy'
+imname = './line/SiO_8_7/sgrc_SiO_8_7'
+niter = 100000
+pc = 'ICRS 17:44:40.391513 -29.28.14.567605'
+restfreq = '347.330631GHz'
+start = '-150km/s'  ## Vsys ~-55 km/s
+nchan = 200
+
+tclean(vis = linelist,
+  imagename=imname,
+  specmode='cube',
+  deconvolver = 'multiscale',
+  spw = '3', ## Only select spw2 to image
+  niter = niter,
+  start = start,
+  nchan = nchan,
+  scales = [0,5,15,50],
+  imsize=imsize,
+  cell=cell,
+  restfreq = restfreq,
+  phasecenter = pc,
+  threshold=threshold,  
+  #nterms=2, 
+  gridder='mosaic', 
+  weighting=weighting,
+  outframe = 'LSRK', 
+  interactive = False,
+  pblimit = 0.1,
+  robust = robust,
+  usemask = 'auto-multithresh',
+  sidelobethreshold = 3.0,
+  noisethreshold = 5.0,
+  minbeamfrac = 0.3,
+  lownoisethreshold = 1.5,
+  negativethreshold = 0.0,
+  pbmask = 0.3)
+
+exportfits(imagename=imname+".image", fitsimage=imname+".image.fits", velocity=True, overwrite=True)
